@@ -10,33 +10,24 @@
  * };
  */
 class Solution {
-      int down_nodes(TreeNode* root){
-        if(!root)
-        return 0;
-
-        return 1+down_nodes(root->left)+down_nodes(root->right);
-    } 
-    int solve(TreeNode* root,int &ans){
-        if(!root)return 0;
-
-        int sum = 0;
-        sum+=solve(root->left,ans);
-        sum+=solve(root->right,ans);
-
-        int height = down_nodes(root);
-
-        sum += root->val;
-
-        if(sum / height == root->val)ans++;
-
-        return sum;
-    }
 public:
     int averageOfSubtree(TreeNode* root) {
-           if(!root)return 0;
-           int ans = 0;
-            solve(root,ans);
-            return ans;
+        int count = 0;
+        dfs(root, count);
+        return count;
+    }
+private:
+    pair<int,int> dfs(TreeNode* root, int& count){
+        if(!root) return {0,0};
 
+        auto left = dfs(root->left, count);
+        auto right = dfs(root->right, count);
+
+        int totalSum = left.first + right.first + root->val;
+        int totalCount = left.second + right.second + 1;
+
+        if(totalSum / totalCount == root->val) count ++;
+
+        return {totalSum, totalCount};
     }
 };
